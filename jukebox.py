@@ -10,9 +10,9 @@ app = Flask(__name__)
 def jukebox():
     if request.method == 'POST':
         url = request.form['url']
-        #vlc_param = '"' + url + '"'
-        url = url + ' novideo'
-        call(["cvlc", url])
+        url = url + '&amp;vq=hd720'
+        print url
+        call(["cvlc", url, 'novideo'])
     return render_template('jukebox.html')
     
 if __name__ == '__main__':
