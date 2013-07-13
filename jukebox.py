@@ -11,7 +11,7 @@ def jukebox():
     if request.method == 'POST':
         url = request.form['url']
         #vlc_param = '"' + url + '"'
-        url = url + '&amp;vq=small'
+        url = url + '&amp;vq=small novideo'
         call(["vlc", url])
     return render_template('jukebox.html')
     
