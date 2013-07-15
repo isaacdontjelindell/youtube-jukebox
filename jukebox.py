@@ -20,8 +20,7 @@ tn.read_until("Password:")
 tn.write('jukebox\n')
 time.sleep(.5)
 
-# will hold songs to be played
-play_queue = Queue()
+playing = False
 
 # start the Flask listener
 app = Flask(__name__)
@@ -36,8 +35,10 @@ def jukebox():
 
 def enqueue(url):
     tn.write('enqueue ' + url.encode('ascii') + '\n')
-    time.sleep(0.5)
-    tn.write('play\n')
+    if not playing:
+        time.sleep(0.5)
+        tn.write('play\n')
+        playing = True
     #time.sleep(1)
     #tn.write("vtrack -1\n") # disable video
 
