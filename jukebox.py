@@ -2,11 +2,8 @@ from flask import Flask
 from flask import request
 from flask import render_template
 
-from subprocess import call
 from subprocess import Popen
-from Queue import Queue
 
-import sys
 import telnetlib
 import time
 
@@ -20,6 +17,7 @@ tn.read_until("Password:")
 tn.write('jukebox\n')
 time.sleep(.5)
 
+playing = False
 
 # start the Flask listener
 app = Flask(__name__)
@@ -33,14 +31,12 @@ def jukebox():
     return render_template('jukebox.html')
 
 def enqueue(url):
+    global playing
     tn.write('enqueue ' + url.encode('ascii') + '\n')
     if not playing:
         time.sleep(0.5)
         tn.write('play\n')
         playing = True
-    #time.sleep(1)
-    #tn.write("vtrack -1\n") # disable video
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
-    playing = False
