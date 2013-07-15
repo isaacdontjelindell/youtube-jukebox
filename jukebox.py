@@ -41,7 +41,7 @@ def jukebox():
     return render_template('jukebox.html')
 
 def enqueue(url):
-    tn.write('enqueue ' + url + '\n')
+    tn.write('enqueue ' + url.encode('ascii') + '\n')
     time.sleep(0.5)
     tn.write('play\n')
     time.sleep(1)
