@@ -26,12 +26,6 @@ play_queue = Queue()
 # start the Flask listener
 app = Flask(__name__)
 
-#tn.write("enqueue http://www.youtube.com/watch?v=L4ekUKIdzrs\n")
-#time.sleep(.5)
-#tn.write("play\n")
-#time.sleep(1)
-#tn.write("vtrack -1\n") # disable video
-
 @app.route('/', methods=['POST', 'GET'])
 def jukebox():
     if request.method == 'POST':
@@ -44,8 +38,8 @@ def enqueue(url):
     tn.write('enqueue ' + url.encode('ascii') + '\n')
     time.sleep(0.5)
     tn.write('play\n')
-    time.sleep(1)
-    tn.write("vtrack -1\n") # disable video
+    #time.sleep(1)
+    #tn.write("vtrack -1\n") # disable video
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
