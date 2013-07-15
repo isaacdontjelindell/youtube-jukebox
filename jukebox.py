@@ -20,7 +20,6 @@ tn.read_until("Password:")
 tn.write('jukebox\n')
 time.sleep(.5)
 
-playing = False
 
 # start the Flask listener
 app = Flask(__name__)
@@ -44,3 +43,4 @@ def enqueue(url):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
+    playing = False
