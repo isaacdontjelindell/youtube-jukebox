@@ -17,13 +17,26 @@ def jukebox():
 
     return render_template('jukebox.html')
 
+def enqueue(videoid):
+    driver.get("http://localhost:5000/player/"+videoid)
+    pass
+
+@app.route('/pause', methods=['POST'])
+def pause():
+    driver.execute_script("player.pauseVideo()")
+    return ""
+
+@app.route('/play', methods=['POST'])
+def play():
+    driver.execute_script("player.playVideo()")
+    return ""
+
+## Generate the server-side player page ##
 @app.route('/player/<videoid>', methods=['GET'])
 def player(videoid):
     return render_template('player.html', video_id=videoid)
 
-def enqueue(videoid):
-    driver.get("http://localhost:5000/player/"+videoid)
-    pass
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', threaded=True)
