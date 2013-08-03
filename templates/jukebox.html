@@ -8,5 +8,15 @@
     <input type='text' name='url' placeholder='Enter a Youtube URL'>
     <input type='submit' value='Play It'>
   </form>
+
+  <button type="button" onclick="pause();">Pause</button>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript">
+    function pause() {
+      $.post('http://localhost:5000/pause', null, function(data) { console.log(data); })
+    }
+  </script>
+
 </body>
 </html>
