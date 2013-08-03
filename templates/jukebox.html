@@ -15,10 +15,10 @@
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script type="text/javascript">
     function pause() {
-      $.post('http://localhost:5000/pause', null, function(data) { console.log(data); })
+      $.post('/pause', null, function(data) { console.log(data); })
     }
     function play() {
-      $.post('http://localhost:5000/play', null, function(data) { console.log(data); })
+      $.post('/play', null, function(data) { console.log(data); })
     }
   </script>
 
