@@ -18,7 +18,7 @@ def jukebox():
     return render_template('jukebox.html')
 
 def enqueue(videoid):
-    driver.get("http://localhost:5000/player/"+videoid)
+    driver.get("player/"+videoid)
     pass
 
 @app.route('/pause', methods=['POST'])
