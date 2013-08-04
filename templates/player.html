@@ -2,12 +2,17 @@
 <html>
 <head>
   <title>Player</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body>
   <iframe id="player"
           width="200"
           height="200"
+          {% if video_id %}
           src="//www.youtube.com/embed/{{ video_id }}?enablejsapi=1"
+          {% else %}
+          src=""
+          {% endif %}
           frameborder="0"
           allowfullscreen>
    </iframe>
@@ -18,10 +23,26 @@
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('player', {
         events: {
-          'onReady': onPlayerReady
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
         }
-          //'onStateChange': onPlayerStateChange
       });
+      loadNextVideo();
+    }
+
+    function loadNextVideo() {
+      $.post('/getnextvideo', null, function(data) {
+        console.log('data:' + data);
+        var src = "//www.youtube.com/embed/"+data+"?enablejsapi=1";
+        $("#player").attr('src', src);
+      });
+    }
+
+    function onPlayerStateChange(event) {
+      // if a video just ended
+      if (event.data == 0) {
+        loadNextVideo();
+      }
     }
 
     function onPlayerReady() {
