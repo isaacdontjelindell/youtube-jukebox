@@ -3,51 +3,46 @@
 <head>
   <title>Player</title>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script
 </head>
 <body>
-  <iframe id="player"
-          width="200"
-          height="200"
-          {% if video_id %}
-          src="//www.youtube.com/embed/{{ video_id }}?enablejsapi=1"
-          {% else %}
-          src=""
-          {% endif %}
-          frameborder="0"
-          allowfullscreen>
-   </iframe>
+  <div id="ytapiplayer">
+    You need Flash player 8+ and JavaScript enabled to view this video.
+  </div>
 
-  <script src="https://www.youtube.com/iframe_api"></script>
+  <script type="text/javascript">
+      var params = { allowScriptAccess: "always" };
+      var atts = { id: "myytplayer" };
+      swfobject.embedSWF("http://www.youtube.com/apiplayer?enablejsapi=1&version=3",
+                       "ytapiplayer", "425", "356", "8", null, null, params, atts);
+  </script>
+
   <script type="text/javascript">
     var player;
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('player', {
-        events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
-        }
-      });
-      loadNextVideo();
+    function onYouTubePlayerReady() {
+      player = document.getElementById("myytplayer");
+        player.addEventListener("onStateChange", "onPlayerStateChange");
+      loadNextVideo()
     }
 
     function loadNextVideo() {
       $.post('/getnextvideo', null, function(data) {
         console.log('data:' + data);
-        var src = "//www.youtube.com/embed/"+data+"?enablejsapi=1";
-        $("#player").attr('src', src);
+        if (data == '') {
+          setTimeout(loadNextVideo, 2000)
+        } else {
+          player.loadVideoById(data)
+        }
       });
     }
 
     function onPlayerStateChange(event) {
       // if a video just ended
-      if (event.data == 0) {
+      if (event == 0) {
         loadNextVideo();
       }
     }
 
-    function onPlayerReady() {
-      player.playVideo();
-    }
   </script>
 </body>
 </html>

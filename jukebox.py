@@ -45,19 +45,19 @@ def play():
     return ""
 
 ## Generate the server-side player page ##
-@app.route('/player/<videoid>', methods=['GET'])
-def player(videoid):
-    return render_template('player.html', video_id=videoid)
-
 @app.route('/player', methods=['GET'])
 def player():
     return render_template('player.html', video_id=None)
 
 @app.route('/getnextvideo', methods=['POST'])
 def getnextvideo():
-    vid = queue.get()
-    queue.task_done()
-    return vid
+    try:
+        vid = queue.get(block=False)
+        print 'sending video %s' % vid
+        queue.task_done()
+        return vid
+    except Exception, e:
+        return ''
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', threaded=True)
