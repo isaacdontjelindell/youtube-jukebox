@@ -4,13 +4,21 @@
   <title>Youtube Jukebox</title>
 </head>
 <body>
-  <form name='url_form' method='POST' action='#'>
-    <input type='text' name='url' placeholder='Enter a Youtube URL'>
-    <input type='submit' value='Queue it'>
-  </form>
 
-  <button type="button" onclick="pause();">Pause</button>
-  <button type="button" onclick="play();">Play</button>
+  <div id="controls">
+    <form name='url_form' method='POST' action='#'>
+      <input type='text' name='url' placeholder='Enter a Youtube URL'>
+      <input type='submit' value='Queue it'>
+    </form>
+
+    <button type="button" onclick="pause();">Pause</button>
+    <button type="button" onclick="play();">Play</button>
+  </div>
+
+  <div id="playlist-container">
+    <ol id="playlist"></ol>
+  </div>
+
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script type="text/javascript">
@@ -20,6 +28,18 @@
     function play() {
       $.post('/play', null, function(data) { console.log(data); })
     }
+
+    function showPlaylist(playlist) {
+      console.log(playlist)
+    }
+
+    function getPlaylist() {
+      // update the playlist every 5 seconds
+      $.post('/getplaylist', null, showPlaylist);
+      setTimeout(getPlaylist, 5000)
+    }
+
+    $(document).ready(getPlaylist)
   </script>
 
 </body>
