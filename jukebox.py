@@ -65,6 +65,7 @@ def getnextvideo():
             print 'sending video %s' % vid
             return vid
 
+@app.route('/getplaylist', methods=['POST'])
 def getplaylist():
     with lock:
         return json.dumps(playlist)
