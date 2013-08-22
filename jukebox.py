@@ -35,8 +35,8 @@ def enqueue(url):
     with lock:
         playlist.append(video_id)
 
-    #if not 'player' in driver.current_url:
-    #    driver.get("http://localhost:5000/player")
+    if not 'player' in driver.current_url:
+        driver.get("http://localhost:5000/player")
 
 @app.route('/pause', methods=['POST'])
 def pause():
