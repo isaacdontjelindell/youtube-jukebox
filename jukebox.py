@@ -2,8 +2,9 @@ from flask import Flask
 from flask import request
 from flask import render_template
 from selenium import webdriver
-from Queue import Queue
+from threading import Lock
 import urlparse
+import json
 
 
 # start the Flask listener
@@ -13,7 +14,9 @@ app = Flask(__name__)
 driver = webdriver.Firefox()
 
 # play queue - contains video ids to be played
-queue = Queue()
+playlist = []
+lock = Lock()  # to allow concurrent usage
+
 
 @app.route('/', methods=['POST', 'GET'])
 def jukebox():
@@ -29,7 +32,8 @@ def enqueue(url):
     url_data = urlparse.urlparse(url)
     query = urlparse.parse_qs(url_data.query)
     video_id = query["v"][0]
-    queue.put(video_id)
+    with lock:
+        playlist.append(video_id)
 
     #if not 'player' in driver.current_url:
     #    driver.get("http://localhost:5000/player")
@@ -47,17 +51,24 @@ def play():
 ## Generate the server-side player page ##
 @app.route('/player', methods=['GET'])
 def player():
-    return render_template('player.html', video_id=None)
+    return render_template('player.html')
 
+## Return a video id if the playlist isn't empty,
+## otherwise return empty string
 @app.route('/getnextvideo', methods=['POST'])
 def getnextvideo():
-    try:
-        vid = queue.get(block=False)
-        print 'sending video %s' % vid
-        queue.task_done()
-        return vid
-    except Exception, e:
-        return ''
+    with lock:
+        if len(playlist) == 0:
+            return ''
+        else:
+            vid = playlist.pop(0)
+            print 'sending video %s' % vid
+            return vid
+
+def getplaylist():
+    with lock:
+        return json.dumps(playlist)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', threaded=True)
